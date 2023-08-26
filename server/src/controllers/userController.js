@@ -3,12 +3,6 @@ import createHttpError from "http-errors";
 import User from "../models/userModel.js";
 import { generateToken } from "../utils/generateToken.js";
 
-// user roles
-const roles = {
-  ADMIN: "admin",
-  USER: "user",
-};
-
 //register user
 const signUp = asyncHandler(async (req, res) => {
   const { username, email, password, confirmPassword } = req.body;
