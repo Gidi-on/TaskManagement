@@ -2,19 +2,23 @@ import mongoose from "mongoose";
 
 const todoSchema = mongoose.Schema({
   user: { type: mongoose.Schema.Types.ObjectId },
+
   title: {
     type: String,
     required: true,
   },
   description: {
     type: String,
+    required: true,
   },
   dueDate: {
     type: String,
+    required: true,
   },
   precedence: {
-    enum: ["low", "medium", "high"],
+    enum: ["Low", "Medium", "High"],
     type: String,
+    required: true,
   },
   finished: {
     type: Boolean,

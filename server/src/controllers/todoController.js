@@ -10,8 +10,8 @@ const createTodo = asyncHandler(async (req, res) => {
 
   const user = req.user;
 
-  if (!title || !description || !dueDate || !precedence || finished === "") {
-    throw createHttpError(400, "Please fill all compulsory fields");
+  if (!title || !description || !dueDate || !precedence) {
+    throw createHttpError(400, "Please fill all fields");
   }
 
   const todo = await Todo.create({
@@ -20,7 +20,6 @@ const createTodo = asyncHandler(async (req, res) => {
     description,
     dueDate,
     precedence,
-    finished,
   });
   res.status(201).json(todo);
 });
@@ -47,29 +46,21 @@ const getTodos = asyncHandler(async (req, res) => {
 // @access  Private - user role
 const updateTodo = asyncHandler(async (req, res) => {
   const id = req.params.id;
-  const { newTitle, newDescription, newDueDate, newPrecedence, newFinished } =
-    req.body;
+  const { title, description, dueDate, precedence, newFinished } = req.body;
 
-  if (
-    !newTitle ||
-    !newDescription ||
-    !newDueDate ||
-    !newPrecedence ||
-    newFinished === ""
-  ) {
+  if (!title || !description || !dueDate || !precedence) {
     throw createHttpError(400, "please fill all necessary fields");
   }
 
-  const todo = await Todo.findOne({ _id: id }).exec();
+  const todo = await Todo.findById({ id: id }).exec();
 
   if (!todo) {
     throw createHttpError(404, "Invalid todo details");
   }
-  todo.title = newTitle;
-  todo.description = newDescription;
-  todo.dueDate = newDueDate;
-  todo.precedence = newPrecedence;
-  todo.finished = newFinished;
+  todo.title = title;
+  todo.description = description;
+  todo.dueDate = dueDate;
+  todo.precedence = precedence;
 
   const updatedTodo = await todo.save();
   res.status(200).json(updatedTodo);

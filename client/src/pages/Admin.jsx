@@ -3,14 +3,14 @@ import { AiOutlineDelete, AiOutlineEdit } from "react-icons/ai";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
-import { deleteTodo, getUserTodo } from "../features/todo/todoSlice.js";
+import { deleteTodo, getAllTodo } from "../features/todo/todoSlice.js";
 import Layout from "./../layout/UserLayout.jsx";
 
-const Dashboard = () => {
+const Admin = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
 
-  const { todo, error, message } = useSelector((state) => state.todo);
+  const { todo } = useSelector((state) => state.todo);
 
   const { user } = useSelector((state) => state.user);
 
@@ -31,12 +31,10 @@ const Dashboard = () => {
     if (!user) {
       toast.error("Unauthorized, Please signin!");
       navigate("/");
-    } else if (error) {
-      toast.error(message);
     } else {
-      dispatch(getUserTodo());
+      dispatch(getAllTodo());
     }
-  }, [user, navigate, dispatch, error, message]);
+  }, [user, navigate, dispatch]);
 
   return (
     <Layout>
@@ -81,7 +79,7 @@ const Dashboard = () => {
                         className="text-primary border border-primary px-4 py-1 rounded-lg hover:font-bold hover:bg-red-500 hover:text-white"
                         onClick={() => {
                           dispatch(deleteTodo(task._id));
-                          dispatch(getUserTodo());
+                          dispatch(getAllTodo());
                         }}
                       >
                         <AiOutlineDelete />
@@ -99,7 +97,7 @@ const Dashboard = () => {
             ))
           ) : (
             <div className="flex">
-              <p className="w-full text-center font-bold text-4xl my-24">
+              <p className="w-full text-center font-bold text-4xl my-24 flex justify-center self-center border border-black">
                 Yikes, you have not created a task to manage yet.
               </p>
             </div>
@@ -110,4 +108,4 @@ const Dashboard = () => {
   );
 };
 
-export default Dashboard;
+export default Admin;

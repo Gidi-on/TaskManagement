@@ -10,7 +10,7 @@ const Navbar = () => {
   const dispatch = useDispatch();
 
   const handleAdd = () => {
-    navigate("/form");
+    navigate("/user/new");
   };
   const handleLogout = () => {
     dispatch(signout());
@@ -36,7 +36,7 @@ const Navbar = () => {
           <IoAddOutline />
         </div>
         <div
-          className="flex items-center text-2xl text-white rounded-sm h-10 ml-2 bg-primary px-4 cursor-pointer hover:bg-transparent hover:text-secondary hover:border hover:border-primary"
+          className="flex items-center text-2xl text-white rounded-sm h-10 ml-2 bg-primary px-4 cursor-pointer hover:bg-transparent hover:text-primary hover:border hover:border-primary"
           onClick={handleLogout}
         >
           <PiSignOutBold />

@@ -18,7 +18,12 @@ export const signup = createAsyncThunk(
     try {
       return await userService.signup(user);
     } catch (error) {
-      const message = error.response.data.error;
+      const message =
+        (error.response &&
+          error.response.data &&
+          error.response.data.message) ||
+        error.message ||
+        error.toString();
       return thunkAPI.rejectWithValue(message);
     }
   }
@@ -31,7 +36,12 @@ export const signin = createAsyncThunk(
     try {
       return await userService.signin(user);
     } catch (error) {
-      const message = error.response.data.error;
+      const message =
+        (error.response &&
+          error.response.data &&
+          error.response.data.message) ||
+        error.message ||
+        error.toString();
       return thunkAPI.rejectWithValue(message);
     }
   }

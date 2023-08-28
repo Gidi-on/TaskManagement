@@ -12,7 +12,7 @@ const router = express.Router();
 router.post("/create", createTodo);
 router.get("/tasks", getTodo);
 router.get("/admin", restrict("admin"), getTodos);
-router.patch("/update/:id", updateTodo);
-router.delete("/delete/:id", restrict("admin"), deleteTodo);
+router.patch("/:id", updateTodo);
+router.delete("/:id", restrict("admin"), deleteTodo);
 
 export default router;

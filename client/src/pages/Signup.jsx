@@ -1,24 +1,23 @@
 import { ErrorMessage } from "@hookform/error-message";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { BiUser } from "react-icons/bi";
 import { GiPadlock } from "react-icons/gi";
 import { HiOutlineMail } from "react-icons/hi";
-// import { useDispatch, useSelector } from "react-redux";
-import { Link } from "react-router-dom";
+import { useDispatch, useSelector } from "react-redux";
+import { Link, useNavigate } from "react-router-dom";
+import { toast } from "react-toastify";
 import { z } from "zod";
 import logo from "../assets/todo.jpg";
+import { signup } from "../features/user/userSlice";
 import Layout from "../layout";
-// import { signUp } from "../features/admin/adminReducer";
-// import { RootState } from "../features/store";
-// import Spinner from "../utils/Spinner";
 
 const Signup = () => {
-  //   const dispatch = useDispatch();
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
 
-  //   const { loading, error, message } = useSelector(
-  //     (state: RootState) => state.admin
-  //   );
+  const { user, success, error, message } = useSelector((state) => state.user);
 
   const formSchema = z
     .object({
@@ -36,7 +35,6 @@ const Signup = () => {
         .string({
           required_error: "Email is required",
         })
-        .min(8, { message: "Email length must be at least 8." })
         .email({ message: "The email is invalid." })
         .trim(),
 
@@ -54,42 +52,42 @@ const Signup = () => {
         })
         .nonempty(),
 
-      confirmPassword: z.string(),
+      confirmPassword: z.string().nonempty(),
     })
-    .refine((data) => data.confirmPassword === data.password, {
-      message: "Passwords don't match",
-      path: ["confirmPassword"],
-    });
+    .refine(
+      (data) => {
+        return data.password === data.confirmPassword;
+      },
+      {
+        message: "Passwords don't match",
+        path: ["confirmPassword"],
+      }
+    );
 
-  const { register, handleSubmit, formState } = useForm({
+  const formData = useForm({
     resolver: zodResolver(formSchema),
   });
 
-  const errors = formState.errors;
-  const isSubmitting = formState.isSubmitting;
+  const register = formData.register;
+  const handleSubmit = formData.handleSubmit;
+  const reset = formData.reset;
+  const errors = formData.formState.errors;
+  const isSubmitting = formData.formState.isSubmitting;
 
-  // const {
-  //   register,
-  //   handleSubmit,
-  //   // reset,
-  //   formState: { errors, isSubmitting },
-  // } = useForm <
-  // // eslint-disable-next-line no-undef
-  // FormDataType >
-  // {
-  //   resolver: zodResolver(formSchema),
-  // };
-
-  //   useEffect(() => {
-  //     if (error) {
-  //       toast.error(message);
-  //       reset({ username: "", email: "", password: "", confirmPassword: "" });
-  //     }
-  //   }, []);
+  useEffect(() => {
+    if (error) {
+      toast.error(message);
+    } else if (success && user) {
+      navigate("/user/dashboard");
+      toast.success(`Welcome ${user.username}`);
+      return () => {
+        reset({ username: "", email: "", password: "", confirmPassword: "" });
+      };
+    }
+  }, [message, navigate, reset, success, user, error]);
 
   const onSubmit = (data) => {
-    console.log(data);
-    // dispatch<any>(signUp(data));
+    dispatch(signup(data));
   };
 
   //   if (loading) {
